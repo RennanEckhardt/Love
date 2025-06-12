@@ -13,8 +13,8 @@ const lbImg = document.getElementById("lightbox-img");
 const lbClose = document.getElementById("lightbox-close");
 
 // Configurações
-const totalFotos = 9;    // ajuste para sua pasta /fotos/
-const totalTracks = 1;    // ajuste para sua pasta /musica/
+const totalFotos = 51;    // ajuste para sua pasta /fotos/
+const totalTracks = 6;    // ajuste para sua pasta /musica/
 let varalCount = 0;
 let currentTrack = 0;
 let translationLoadedFor = null;
@@ -44,7 +44,7 @@ function criarVaral() {
   fotos = fotos.concat(fotos);
   shuffle(fotos).forEach(n => {
     const img = document.createElement("img");
-    img.src = `fotos/${n}.jpg`;
+    img.src = `fotos/imagem (${n}).jpg`;
     img.className = "foto";
     img.addEventListener("click", () => openLightbox(img.src));
     varal.appendChild(img);
@@ -82,9 +82,40 @@ function togglePlayPause() {
   if (audio.paused) { audio.play(); playPauseBtn.textContent = "⏸️"; } 
   else { audio.pause(); playPauseBtn.textContent = "▶️"; }
 }
-function nextTrack() { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(currentTrack); audio.play(); playPauseBtn.textContent = "⏸️"; }
-function prevTrack() { currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; loadTrack(currentTrack); audio.play(); playPauseBtn.textContent = "⏸️"; }
-
+function loadTranslation(trackIndex) {
+    // Mostra um indicador de carregamento
+    translationContent.innerHTML = '<div class="loading">Carregando tradução...</div>';
+    
+    fetch(`traducao/${trackIndex+1}.txt`)
+      .then(res => res.ok ? res.text() : Promise.reject())
+      .then(text => {
+        const paras = text.split("\n\n");
+        translationContent.innerHTML = paras.map(p => `<p>${p.replace(/\n/g,"<br>")}</p>`).join("");
+      })
+      .catch(() => translationContent.innerHTML = "<p><em>Tradução não disponível.</em></p>");
+  }
+  
+function nextTrack() { 
+    currentTrack = (currentTrack + 1) % playlist.length; 
+    loadTrack(currentTrack); 
+    audio.play(); 
+    playPauseBtn.textContent = "⏸️"; 
+    
+    // Atualiza a tradução imediatamente
+    loadTranslation(currentTrack);
+    translationLoadedFor = currentTrack;
+  }
+  
+  function prevTrack() { 
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; 
+    loadTrack(currentTrack); 
+    audio.play(); 
+    playPauseBtn.textContent = "⏸️"; 
+    
+    // Atualiza a tradução imediatamente
+    loadTranslation(currentTrack);
+    translationLoadedFor = currentTrack;
+  }
 playPauseBtn.addEventListener("click", togglePlayPause);
 nextBtn.addEventListener("click", nextTrack);
 prevBtn.addEventListener("click", prevTrack);
