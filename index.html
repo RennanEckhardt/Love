@@ -1,98 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Você me ama?</title>
-    <style>
-        body {
-            background-color: pink;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            position: relative;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        h1 {
-            font-size: 50px;
-            color: red;
-            position: relative;
-        }
-        .buttons {
-            position: relative;
-            display: flex;
-            gap: 20px;
-        }
-        button {
-            font-size: 24px;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .yes {
-            background-color: red;
-            color: white;
-        }
-        .no {
-            background-color: gray;
-            color: white;
-            position: relative;
-        }
-        .message {
-            display: none;
-            font-size: 30px;
-            color: red;
-            margin-top: 20px;
-        }
-        .photo {
-            display: none;
-            margin-top: 20px;
-            width: 300px;
-            height: auto;
-            border-radius: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nosso Amor 💜</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Vc me ama?</h1>
-    <div class="buttons">
-        <button class="yes" onclick="showLove()">Sim</button>
-        <button class="no" onmouseover="runAway()">Não</button>
-    </div>
-    <div class="message" id="loveMessage">
-        🎆💖 Eu sabia! Eu te amo muito! Você é a pessoa mais especial do mundo! Eu sei que sou um boboca as vezes mas eu te amo demais. Vamos comer um BK? 💖🎆
-    </div>
-    <img src="minha_foto.jpg" alt="Minha Foto" class="photo" id="lovePhoto">
-    <script>
-        function runAway() {
-            let button = document.querySelector('.no');
-            let x = Math.random() * 200 - 100;
-            let y = Math.random() * 100 - 50;
-            button.style.transform = `translate(${x}px, ${y}px)`;
-        }
-        function showLove() {
-            document.getElementById("loveMessage").style.display = "block";
-            document.getElementById("lovePhoto").style.display = "block";
-            fireworks();
-        }
-        function fireworks() {
-            let confettiScript = document.createElement('script');
-            confettiScript.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2/dist/confetti.browser.min.js";
-            document.body.appendChild(confettiScript);
-            confettiScript.onload = () => {
-                setInterval(() => {
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-                }, 500);
-            };
-        }
-    </script>
+  <!-- Player sem autoplay; início via clique -->
+  <audio id="audio-player" loop>
+    <!-- src será definido via JS -->
+    Seu navegador não suporta áudio.
+  </audio>
+
+  <!-- Controles de áudio -->
+  <div id="audio-controls" class="hidden">
+    <button id="prev-btn">⏮️</button>
+    <button id="play-pause-btn">▶️</button>
+    <button id="next-btn">⏭️</button>
+  </div>
+
+  <div id="container"></div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="hidden">
+    <span id="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="Foto ampliada">
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
