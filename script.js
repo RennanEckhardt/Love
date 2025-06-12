@@ -15,16 +15,9 @@ const lbClose = document.getElementById("lightbox-close");
 // Configurações
 const totalFotos = 51;    // ajuste para sua pasta /fotos/
 const totalTracks = 6;    // ajuste para sua pasta /musica/
-const fotosPorVaral = 17; // Número de fotos por varal
-const fotosUsadas = new Set();
-
 let varalCount = 0;
 let currentTrack = 0;
 let translationLoadedFor = null;
-
-let todasFotos = Array.from({ length: totalFotos }, (_, i) => i + 1);
-
-shuffle(todasFotos);
 
 // Playlist
 const playlist = Array.from({ length: totalTracks }, (_, i) => `musica/${i + 1}.mp3`);
@@ -39,36 +32,17 @@ function shuffle(arr) {
 }
 
 // Cria um varal (carrossel)
-// Função criarVaral modificada
 function criarVaral() {
     varalCount++;
-
-    // Criar wrapper do varal
     const wrapper = document.createElement("div");
     wrapper.className = "varal-wrapper";
+
     const varal = document.createElement("div");
     varal.className = "varal";
 
-    // 1. Verificar fotos disponíveis
-    const fotosDisponiveis = todasFotos.filter(n => !fotosUsadas.has(n));
-
-    // 2. Se não houver fotos suficientes, reiniciar o conjunto
-    if (fotosDisponiveis.length < fotosPorVaral) {
-        fotosUsadas.clear();
-    }
-
-    // 3. Selecionar fotos aleatoriamente SEM repetição
-    const fotosSelecionadas = [];
-    while (fotosSelecionadas.length < fotosPorVaral && fotosDisponiveis.length > 0) {
-        const randomIndex = Math.floor(Math.random() * fotosDisponiveis.length);
-        const fotoSelecionada = fotosDisponiveis.splice(randomIndex, 1)[0];
-
-        fotosSelecionadas.push(fotoSelecionada);
-        fotosUsadas.add(fotoSelecionada);
-    }
-
-    // 4. Adicionar fotos ao varal
-    fotosSelecionadas.forEach(n => {
+    let fotos = Array.from({ length: totalFotos }, (_, i) => i + 1);
+    fotos = fotos.concat(fotos);
+    shuffle(fotos).forEach(n => {
         const img = document.createElement("img");
         img.src = `fotos/imagem (${n}).jpg`;
         img.className = "foto";
@@ -76,8 +50,7 @@ function criarVaral() {
         varal.appendChild(img);
     });
 
-    // Configurações de animação
-    varal.style.animationDuration = (Math.random() * 20 + 20).toFixed(1) + "s";
+    varal.style.animationDuration = (Math.random() * 30 + 30).toFixed(1) + "s";
     varal.style.animationDirection = (varalCount % 2 === 0) ? "reverse" : "normal";
 
     wrapper.appendChild(varal);
