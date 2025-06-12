@@ -154,6 +154,7 @@ function criarCarrossel(grupoFotos) {
         const img = document.createElement("img");
         img.src = `fotos/imagem (${n}).jpg`;
         img.className = "carrossel-foto";
+        img.loading = "eager"; // <-- prioridade de carregamento
         img.addEventListener("click", () => openLightbox(img.src));
         carrossel.appendChild(img);
     });
@@ -233,11 +234,12 @@ function criarCarrossel(grupoFotos) {
     container.appendChild(wrapper);
 }
 
-// Criação dos carrosseis animados (todos para a direita)
-window.addEventListener("load", () => {
+// Criação dos carrosseis animados (prioridade máxima)
+document.addEventListener("DOMContentLoaded", () => {
     criarCarrossel(gruposDeFotos[0]);
     criarCarrossel(gruposDeFotos[1]);
     criarCarrossel(gruposDeFotos[2]);
+    // Só depois carregue outros conteúdos
     container.appendChild(translationSection);
     observer.observe(translationSection);
 
@@ -249,9 +251,8 @@ window.addEventListener("load", () => {
         controls.classList.remove("hidden");
     });
     audio.addEventListener("play", () => controls.classList.remove("hidden"), { once: true });
-});
 
-window.addEventListener("DOMContentLoaded", () => {
+    // Abertura
     const opening = document.getElementById("love-opening");
     const btn = document.getElementById("love-enter-btn");
     if (opening && btn) {
