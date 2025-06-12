@@ -243,3 +243,14 @@ window.addEventListener("load", () => {
     });
     audio.addEventListener("play", () => controls.classList.remove("hidden"), { once: true });
 });
+
+window.addEventListener("DOMContentLoaded", () => {
+    const opening = document.getElementById("love-opening");
+    const btn = document.getElementById("love-enter-btn");
+    if (opening && btn) {
+        btn.addEventListener("click", () => {
+            opening.style.opacity = "0";
+            setTimeout(() => opening.style.display = "none", 700);
+        });
+    }
+});
