@@ -77,7 +77,7 @@ function criarVaral() {
     });
 
     // Configurações de animação
-    varal.style.animationDuration = (Math.random() * 15 + 15).toFixed(1) + "s";
+    varal.style.animationDuration = (Math.random() * 20 + 20).toFixed(1) + "s";
     varal.style.animationDirection = (varalCount % 2 === 0) ? "reverse" : "normal";
 
     wrapper.appendChild(varal);
