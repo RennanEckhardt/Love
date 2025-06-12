@@ -158,22 +158,31 @@ function criarCarrossel(grupoFotos) {
         carrossel.appendChild(img);
     });
 
-    // --- Animação automática para a direita ---
+    // --- Animação automática ping-pong com requestAnimationFrame ---
     let autoScroll;
-    const scrollSpeed = 1; // px por frame
+    let scrollSpeed = 1; // px por frame
+    let direction = 1;   // 1 = direita, -1 = esquerda
+    let running = false;
 
+    function autoScrollStep() {
+        if (!running) return;
+        carrossel.scrollLeft += scrollSpeed * direction;
+        if (carrossel.scrollLeft + carrossel.clientWidth >= carrossel.scrollWidth - 1) {
+            direction = -1;
+        }
+        if (carrossel.scrollLeft <= 0) {
+            direction = 1;
+        }
+        autoScroll = requestAnimationFrame(autoScrollStep);
+    }
     function startAutoScroll() {
-        stopAutoScroll();
-        autoScroll = setInterval(() => {
-            carrossel.scrollLeft += scrollSpeed;
-            // Loop infinito
-            if (carrossel.scrollLeft + carrossel.clientWidth >= carrossel.scrollWidth) {
-                carrossel.scrollLeft = 0;
-            }
-        }, 16); // ~60fps
+        if (running) return;
+        running = true;
+        autoScroll = requestAnimationFrame(autoScrollStep);
     }
     function stopAutoScroll() {
-        if (autoScroll) clearInterval(autoScroll);
+        running = false;
+        if (autoScroll) cancelAnimationFrame(autoScroll);
     }
 
     startAutoScroll();
@@ -209,7 +218,7 @@ function criarCarrossel(grupoFotos) {
         carrossel.scrollLeft = scrollLeft - walk;
     });
 
-    // Touch (mobile) — apenas ativa/desativa animação automática
+    // Touch (mobile)
     carrossel.addEventListener('touchstart', () => {
         stopAutoScroll();
     });
@@ -219,8 +228,6 @@ function criarCarrossel(grupoFotos) {
     carrossel.addEventListener('touchcancel', () => {
         startAutoScroll();
     });
-    // Remova o touchmove personalizado!
-    // Assim, o scroll horizontal nativo do navegador funciona com inércia.
 
     wrapper.appendChild(carrossel);
     container.appendChild(wrapper);
