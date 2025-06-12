@@ -45,8 +45,18 @@ function loadTrack(index) {
     audio.load();
 }
 function togglePlayPause() {
-    if (audio.paused) { audio.play(); playPauseBtn.textContent = "⏸️"; }
-    else { audio.pause(); playPauseBtn.textContent = "▶️"; }
+    audio.muted = false; // Garante que sempre desmuta ao clicar no botão
+    if (audio.paused) {
+        audio.play().then(() => {
+            playPauseBtn.textContent = "⏸️";
+            controls.classList.remove('hidden');
+        }).catch(() => {
+            controls.classList.remove("hidden");
+        });
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = "▶️";
+    }
 }
 function loadTranslation(trackIndex) {
     // Mostra um indicador de carregamento
