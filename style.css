@@ -8,50 +8,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Container vertical de varais */
-#container {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  padding: 20px 0;
-}
-
-/* Wrapper de cada carrossel */
-.varal-wrapper {
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-/* Carrossel animado */
-.varal {
-  display: flex;
-  gap: 12px;
-  animation-name: andar;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes andar {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Estilo das fotos */
-.foto {
-  flex-shrink: 0;
-  width: 45vw;
-  height: 45vw;
-  max-width: 200px;
-  max-height: 200px;
-  object-fit: cover;
-  border: 4px solid rgba(255,255,255,0.9);
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.5);
-  cursor: pointer;
-  transition: transform .3s;
-}
-.foto:hover { transform: scale(1.05); }
-
 /* Seção de tradução */
 #translation {
   max-width: 600px;
@@ -313,3 +269,42 @@ body {
   
   /* Adicione no início do CSS para importar a fonte */
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+
+  .carrossel-wrapper {
+    margin: 24px 0;
+    overflow: hidden;
+}
+
+.carrossel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    cursor: grab;
+    padding: 8px 0;
+}
+
+.carrossel.dragging {
+    cursor: grabbing;
+    user-select: none;
+}
+
+.carrossel-foto {
+  flex-shrink: 0;
+  width: 45vw;
+  height: 45vw;
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border: 4px solid rgba(255,255,255,0.9);
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform .3s;
+  background: #eee;
+  position: relative;
+}
+.carrossel-foto:hover,
+.carrossel-foto:active {
+  transform: scale(1.05);
+}
