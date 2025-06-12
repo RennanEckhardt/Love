@@ -15,7 +15,6 @@ const lbClose = document.getElementById("lightbox-close");
 // Configurações
 const totalFotos = 51;    // ajuste para sua pasta /fotos/
 const totalTracks = 6;    // ajuste para sua pasta /musica/
-let varalCount = 0;
 let currentTrack = 0;
 let translationLoadedFor = null;
 
@@ -29,39 +28,6 @@ function shuffle(arr) {
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
-}
-
-// Cria um varal (carrossel)
-function criarVaral() {
-    varalCount++;
-    const wrapper = document.createElement("div");
-    wrapper.className = "varal-wrapper";
-
-    const varal = document.createElement("div");
-    varal.className = "varal";
-
-    let fotos = Array.from({ length: totalFotos }, (_, i) => i + 1);
-    fotos = fotos.concat(fotos);
-    shuffle(fotos).forEach(n => {
-        const img = document.createElement("img");
-        img.src = `fotos/imagem (${n}).jpg`;
-        img.className = "foto";
-        img.addEventListener("click", () => openLightbox(img.src));
-        varal.appendChild(img);
-    });
-
-    varal.style.animationDuration = (Math.random() * 30 + 30).toFixed(1) + "s";
-    varal.style.animationDirection = (varalCount % 2 === 0) ? "reverse" : "normal";
-
-    wrapper.appendChild(varal);
-    container.appendChild(wrapper);
-}
-
-// Garantir scroll inicial
-function ensureScrollable() {
-    while (document.body.scrollHeight <= window.innerHeight) {
-        criarVaral();
-    }
 }
 
 // Lightbox
@@ -79,8 +45,18 @@ function loadTrack(index) {
     audio.load();
 }
 function togglePlayPause() {
-    if (audio.paused) { audio.play(); playPauseBtn.textContent = "⏸️"; }
-    else { audio.pause(); playPauseBtn.textContent = "▶️"; }
+    audio.muted = false; // Garante que sempre desmuta ao clicar no botão
+    if (audio.paused) {
+        audio.play().then(() => {
+            playPauseBtn.textContent = "⏸️";
+            controls.classList.remove('hidden');
+        }).catch(() => {
+            controls.classList.remove("hidden");
+        });
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = "▶️";
+    }
 }
 function loadTranslation(trackIndex) {
     // Mostra um indicador de carregamento
@@ -142,8 +118,14 @@ const observer = new IntersectionObserver(entries => {
     });
 }, { threshold: 0.2 });
 
-// Scroll infinito
-function infiniteScrollHandler() { if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) criarVaral(); }
+// Embaralha as 51 fotos e divide em 3 grupos de 17, sem repetição
+const fotos = shuffle(Array.from({ length: totalFotos }, (_, i) => i + 1));
+const fotosPorCarrossel = 17;
+const gruposDeFotos = [
+    fotos.slice(0, fotosPorCarrossel),
+    fotos.slice(fotosPorCarrossel, fotosPorCarrossel * 2),
+    fotos.slice(fotosPorCarrossel * 2, fotosPorCarrossel * 3)
+];
 
 // Inicia música ao primeiro clique se autoplay falhar
 window.addEventListener('click', () => {
@@ -160,24 +142,115 @@ window.addEventListener('click', () => {
     }
 }, { once: true });
 
+// Função para criar um carrossel animado e arrastável
+function criarCarrossel(grupoFotos) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "carrossel-wrapper";
+
+    const carrossel = document.createElement("div");
+    carrossel.className = "carrossel";
+
+    grupoFotos.forEach(n => {
+        const img = document.createElement("img");
+        img.src = `fotos/imagem (${n}).jpg`;
+        img.className = "carrossel-foto";
+        img.addEventListener("click", () => openLightbox(img.src));
+        carrossel.appendChild(img);
+    });
+
+    // --- Animação automática para a direita ---
+    let autoScroll;
+    const scrollSpeed = 1; // px por frame
+
+    function startAutoScroll() {
+        stopAutoScroll();
+        autoScroll = setInterval(() => {
+            carrossel.scrollLeft += scrollSpeed;
+            // Loop infinito
+            if (carrossel.scrollLeft + carrossel.clientWidth >= carrossel.scrollWidth) {
+                carrossel.scrollLeft = 0;
+            }
+        }, 16); // ~60fps
+    }
+    function stopAutoScroll() {
+        if (autoScroll) clearInterval(autoScroll);
+    }
+
+    startAutoScroll();
+
+    // --- Arraste manual (touch e mouse) ---
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    // Mouse
+    carrossel.addEventListener('mousedown', (e) => {
+        isDown = true;
+        carrossel.classList.add('dragging');
+        startX = e.pageX - carrossel.offsetLeft;
+        scrollLeft = carrossel.scrollLeft;
+        stopAutoScroll();
+    });
+    carrossel.addEventListener('mouseleave', () => {
+        isDown = false;
+        carrossel.classList.remove('dragging');
+        startAutoScroll();
+    });
+    carrossel.addEventListener('mouseup', () => {
+        isDown = false;
+        carrossel.classList.remove('dragging');
+        startAutoScroll();
+    });
+    carrossel.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - carrossel.offsetLeft;
+        const walk = (x - startX);
+        carrossel.scrollLeft = scrollLeft - walk;
+    });
+
+    // Touch (mobile) — apenas ativa/desativa animação automática
+    carrossel.addEventListener('touchstart', () => {
+        stopAutoScroll();
+    });
+    carrossel.addEventListener('touchend', () => {
+        startAutoScroll();
+    });
+    carrossel.addEventListener('touchcancel', () => {
+        startAutoScroll();
+    });
+    // Remova o touchmove personalizado!
+    // Assim, o scroll horizontal nativo do navegador funciona com inércia.
+
+    wrapper.appendChild(carrossel);
+    container.appendChild(wrapper);
+}
+
+// Criação dos carrosseis animados (todos para a direita)
 window.addEventListener("load", () => {
-    for (let i = 0; i < 3; i++) criarVaral();
-    ensureScrollable();
+    criarCarrossel(gruposDeFotos[0]);
+    criarCarrossel(gruposDeFotos[1]);
+    criarCarrossel(gruposDeFotos[2]);
     container.appendChild(translationSection);
     observer.observe(translationSection);
 
     loadTrack(currentTrack);
-    // Tenta autoplay mudo e depois desmuta para driblar políticas de navegador
     audio.play().then(() => {
         audio.muted = false;
         return audio.play();
     }).catch(() => {
-        // mostra controles enquanto espera clique
         controls.classList.remove("hidden");
     });
-    // mostra controles assim que tocar
     audio.addEventListener("play", () => controls.classList.remove("hidden"), { once: true });
+});
 
-    window.addEventListener("scroll", infiniteScrollHandler);
-    window.addEventListener("resize", ensureScrollable);
+window.addEventListener("DOMContentLoaded", () => {
+    const opening = document.getElementById("love-opening");
+    const btn = document.getElementById("love-enter-btn");
+    if (opening && btn) {
+        btn.addEventListener("click", () => {
+            opening.style.opacity = "0";
+            setTimeout(() => opening.style.display = "none", 700);
+        });
+    }
 });
