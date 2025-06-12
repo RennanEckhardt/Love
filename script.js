@@ -150,7 +150,9 @@ function criarCarrossel(grupoFotos) {
     const carrossel = document.createElement("div");
     carrossel.className = "carrossel";
 
-    grupoFotos.forEach(n => {
+    // DUPLICA as imagens para efeito de loop suave
+    const imagens = grupoFotos.concat(grupoFotos);
+    imagens.forEach(n => {
         const img = document.createElement("img");
         img.src = `fotos/imagem (${n}).jpg`;
         img.className = "carrossel-foto";
@@ -166,9 +168,14 @@ function criarCarrossel(grupoFotos) {
         stopAutoScroll();
         autoScroll = setInterval(() => {
             carrossel.scrollLeft += scrollSpeed;
-            // Loop infinito
-            if (carrossel.scrollLeft + carrossel.clientWidth >= carrossel.scrollWidth) {
+            // Loop suave: se passou da metade, volta para o início da sequência duplicada
+            if (carrossel.scrollLeft >= carrossel.scrollWidth / 2) {
+                // Remove suavização para o reset
+                carrossel.classList.add('no-smooth');
                 carrossel.scrollLeft = 0;
+                // Força reflow para garantir que a classe seja aplicada antes de remover
+                void carrossel.offsetWidth;
+                carrossel.classList.remove('no-smooth');
             }
         }, 16); // ~60fps
     }
