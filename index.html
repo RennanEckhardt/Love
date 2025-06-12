@@ -1,33 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nosso Amor 💜</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Nosso Amor 💜</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <!-- Player sem autoplay; início via clique -->
-  <audio id="audio-player" loop>
-    <!-- src será definido via JS -->
-    Seu navegador não suporta áudio.
-  </audio>
+    <!-- Cabeçalho com mensagem de incentivo -->
+    <header id="header">
+        <div class="heart-pulse">❤</div>
+        <h1>Escolha um dos nossos momentos e aumente o volume</h1>
+        <div class="scroll-indicator">↓</div>
+    </header>
+    <!-- Áudio com autoplay mudo para driblar políticas de autoplay -->
+    <audio id="audio-player" autoplay muted loop>
+        Seu navegador não suporta áudio.
+    </audio>
 
-  <!-- Controles de áudio -->
-  <div id="audio-controls" class="hidden">
-    <button id="prev-btn">⏮️</button>
-    <button id="play-pause-btn">▶️</button>
-    <button id="next-btn">⏭️</button>
-  </div>
+    <!-- Controles de áudio (ocultos até a música tocar) -->
+    <div id="audio-controls" class="hidden">
+        <button id="prev-btn">⏮️</button>
+        <button id="play-pause-btn">▶️</button>
+        <button id="next-btn">⏭️</button>
+    </div>
 
-  <div id="container"></div>
+    <!-- Container de varais -->
+    <div id="container"></div>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="hidden">
-    <span id="lightbox-close">&times;</span>
-    <img id="lightbox-img" src="" alt="Foto ampliada">
-  </div>
+    <!-- Seção de tradução, injetada por JS logo após os primeiros varais -->
+    <section id="translation" class="hidden">
+        <h2>🎵 A nossa trilha sonora 🎵</h2>
+        <div id="translation-content"></div>
+    </section>
 
-  <script src="script.js"></script>
+    <!-- Rodapé que aparece depois da tradução -->
+    <footer id="footer" class="hidden">
+        <div class="heart-container">
+            <div class="heart">♥</div>
+        </div>
+        <p>Te amo, meu amor.
+            Neste 12 de junho, meu coração celebra mais um capítulo da nossa história.
+            Não somos duas metades perfeitas – somos inteiros que se escolhem diariamente.
+            Nossas imperfeições? São como constelações únicas:
+            Quando se entrelaçam, criam um mapa só nosso.
+            É nesse abraço de autenticidade que encontro meu lar.
+            Hoje e em todos os dias que virão,
+            Seremos isso: amor que transforma detalhes em eternidade.
+            Com todo o meu ser,
+            Seu homem para todo sempre.
+        </p>
+        <div class="signature">Te amo, Kamila.</div>
+    </footer>
+
+    <!-- Lightbox para ampliar fotos -->
+    <div id="lightbox" class="hidden">
+        <span id="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Foto ampliada">
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 </html>

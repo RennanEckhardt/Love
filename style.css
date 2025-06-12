@@ -1,5 +1,5 @@
-/* reset básico */
-* { margin:0; padding:0; box-sizing:border-box; }
+/* Reset básico e box-sizing */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: url('imagens/fundo.jpg') no-repeat center center fixed;
@@ -8,7 +8,7 @@ body {
   overflow-x: hidden;
 }
 
-/* container vertical de varais */
+/* Container vertical de varais */
 #container {
   display: flex;
   flex-direction: column;
@@ -16,14 +16,13 @@ body {
   padding: 20px 0;
 }
 
-/* wrapper de cada carrossel */
+/* Wrapper de cada carrossel */
 .varal-wrapper {
   overflow: hidden;
-  position: relative;
   white-space: nowrap;
 }
 
-/* carrossel animado */
+/* Carrossel animado */
 .varal {
   display: flex;
   gap: 12px;
@@ -37,7 +36,7 @@ body {
   100% { transform: translateX(-50%); }
 }
 
-/* fotos do varal */
+/* Estilo das fotos */
 .foto {
   flex-shrink: 0;
   width: 45vw;
@@ -53,10 +52,54 @@ body {
 }
 .foto:hover { transform: scale(1.05); }
 
-/* lightbox */
+/* Seção de tradução */
+#translation {
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.9);
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-family: 'Georgia', serif;
+  line-height: 1.6;
+  color: #333;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0;
+  transform: translateY(30px);
+}
+#translation.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#translation h2 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #800080;
+  text-align: center;
+}
+#translation-content p {
+  margin-bottom: 1em;
+  text-indent: 1em;
+}
+
+/* Rodapé */
+#footer {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #800080;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#footer.visible {
+  opacity: 1;
+}
+
+/* Lightbox */
 #lightbox {
   position: fixed;
-  top:0; left:0; right:0; bottom:0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.8);
   display: flex;
   align-items: center;
@@ -73,13 +116,13 @@ body {
 }
 #lightbox-close {
   position: absolute;
-  top:20px; right:30px;
+  top: 20px; right: 30px;
   font-size: 2rem;
   color: white;
   cursor: pointer;
 }
 
-/* controles de áudio */
+/* Controles de áudio */
 #audio-controls {
   position: fixed;
   bottom: 15px;
@@ -101,37 +144,165 @@ body {
   cursor: pointer;
 }
 
-/* otimização mobile */
+/* Mobile */
 @media (max-width:600px) {
   .foto { width: 35vw; height: 35vw; }
 }
 
-/* ---- seção de tradução ---- */
-#translation {
+/* Estilos melhorados para o rodapé */
+#footer {
     max-width: 600px;
-    margin: 60px auto;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    font-family: 'Georgia', serif;
-    line-height: 1.6;
-    color: #333;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  #translation.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  #translation h2 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-    color: #800080;
+    margin: 40px auto;
     text-align: center;
+    font-size: 1.1rem;
+    color: #5a3d5c; /* Roxo mais suave */
+    opacity: 0;
+    transition: opacity 1s ease;
+    padding: 30px;
+    background: rgba(255, 245, 250, 0.85); /* Fundo rosado claro */
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(149, 67, 139, 0.2);
+    border: 1px solid rgba(255, 182, 193, 0.3);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Georgia', serif;
+    animation: fadeInUp 1.5s ease; /* Adiciona animação de entrada */
   }
-  #translation-content p {
-    margin-bottom: 1em;
-    text-indent: 1em;
+  
+  #footer.visible {
+    opacity: 1;
+    animation: fadeInUp 1.5s ease;
   }
+  
+  #footer p {
+    line-height: 1.8;
+    margin-bottom: 25px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    font-style: italic;
+  }
+  
+  .signature {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #8b4789;
+    margin-top: 15px;
+    text-align: right;
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  .heart-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    opacity: 0.1;
+  }
+  
+  .heart {
+    position: absolute;
+    font-size: 24px;
+    color: #ff6b9d;
+    animation: float 15s infinite linear;
+  }
+  
+  /* Criar múltiplos corações */
+  .heart:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+  .heart:nth-child(2) { top: 25%; left: 80%; animation-delay: 2s; }
+  .heart:nth-child(3) { top: 60%; left: 40%; animation-delay: 4s; }
+  .heart:nth-child(4) { top: 75%; left: 65%; animation-delay: 6s; }
+  .heart:nth-child(5) { top: 45%; left: 20%; animation-delay: 8s; }
+  
+  /* Animações */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+    100% {
+      transform: translateY(-100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Estilos para o cabeçalho */
+#header {
+    text-align: center;
+    padding: 20px;
+    color: white;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    margin-top: 20px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: appear 1s ease forwards 0.5s;
+  }
+  
+  #header h1 {
+    font-size: 1.5rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    font-family: 'Georgia', serif;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .heart-pulse {
+    font-size: 2rem;
+    animation: pulse 1.5s infinite;
+    margin-bottom: 10px;
+  }
+  
+  .scroll-indicator {
+    font-size: 2rem;
+    animation: bounce 1.5s infinite;
+  }
+  
+  /* Animações */
+  @keyframes appear {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+  
+  /* Ajuste de responsividade */
+  @media (max-width: 600px) {
+    #header h1 {
+      font-size: 1.2rem;
+    }
+  }
+  
+  /* Adicione no início do CSS para importar a fonte */
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
